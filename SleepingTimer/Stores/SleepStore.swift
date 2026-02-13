@@ -14,26 +14,36 @@ public actor SleepStore: SleepStoreProtocol {
 
     private var snapshotState: SleepDataSnapshot
     private var continuations: [UUID: AsyncStream<SleepDataSnapshot>.Continuation]
+    private let encoder: JSONEncoder
+    private let decoder: JSONDecoder
+    private let fileManager: FileManager
 
     /// Creates an empty store instance.
     public init() {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        encoder.outputFormatting = [.sortedKeys]
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+
         self.snapshotState = SleepDataSnapshot()
         self.continuations = [:]
+        self.encoder = encoder
+        self.decoder = decoder
+        self.fileManager = .default
     }
 
     /// Loads persisted records from Documents directory.
     public func loadFromDisk() async throws {
-        let fileURL = try Self.storageURL()
-        guard FileManager.default.fileExists(atPath: fileURL.path) else {
+        let fileURL = try storageURL()
+        guard fileManager.fileExists(atPath: fileURL.path) else {
             try persist()
             publishCurrentState()
             return
         }
 
         let data = try Data(contentsOf: fileURL)
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-
         snapshotState = try decoder.decode(SleepDataSnapshot.self, from: data)
         normalizeAndSortRecords()
         publishCurrentState()
@@ -141,11 +151,7 @@ public actor SleepStore: SleepStoreProtocol {
     }
 
     private func persist() throws {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-
-        let fileURL = try Self.storageURL()
+        let fileURL = try storageURL()
         let data = try encoder.encode(snapshotState)
         try data.write(to: fileURL, options: .atomic)
     }
@@ -160,11 +166,11 @@ public actor SleepStore: SleepStoreProtocol {
         continuations[id] = nil
     }
 
-    private static func storageURL() throws -> URL {
-        guard let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+    private func storageURL() throws -> URL {
+        guard let documents = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
             throw CocoaError(.fileNoSuchFile)
         }
 
-        return documents.appendingPathComponent(fileName)
+        return documents.appendingPathComponent(Self.fileName)
     }
 }
