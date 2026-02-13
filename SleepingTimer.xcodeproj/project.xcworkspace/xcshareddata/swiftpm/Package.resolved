@@ -1,0 +1,15 @@
+{
+  "originHash" : "b918d8b0833a20ec9dd80948f809f8227076efaf1fd6b5fa0e81d19122213f90",
+  "pins" : [
+    {
+      "identity" : "connectivitybridge",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/davidthorn/ConnectivityBridge.git",
+      "state" : {
+        "revision" : "5d64ec14f2912a7663de48cdaa10532455e4a706",
+        "version" : "0.1.0"
+      }
+    }
+  ],
+  "version" : 3
+}
