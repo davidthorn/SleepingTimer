@@ -10,10 +10,10 @@ import SwiftUI
 /// Dashboard content view with stats, controls, and recent records.
 public struct DashboardView: View {
     @StateObject private var viewModel: DashboardViewModel
-    private let sleepStore: any SleepStoreProtocol
+    private let sleepStore: SleepStoreProtocol
 
     /// Creates the dashboard view and its view model.
-    public init(serviceContainer: any ServiceContainerProtocol) {
+    public init(serviceContainer: ServiceContainerProtocol) {
         self.sleepStore = serviceContainer.sleepStore
         let vm = DashboardViewModel(sleepStore: serviceContainer.sleepStore)
         _viewModel = StateObject(wrappedValue: vm)

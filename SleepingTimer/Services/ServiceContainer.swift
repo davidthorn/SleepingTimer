@@ -7,19 +7,13 @@
 
 import Foundation
 
-/// Dependency container for app-level services.
-public protocol ServiceContainerProtocol: Sendable {
-    /// Sleep data store dependency.
-    var sleepStore: any SleepStoreProtocol { get }
-}
-
 /// Concrete dependency container implementation.
 public struct ServiceContainer: ServiceContainerProtocol, Sendable {
     /// Sleep data store dependency.
-    public let sleepStore: any SleepStoreProtocol
+    public let sleepStore: SleepStoreProtocol
 
     /// Creates a container with required service dependencies.
-    public init(sleepStore: any SleepStoreProtocol) {
+    public init(sleepStore: SleepStoreProtocol) {
         self.sleepStore = sleepStore
     }
 }

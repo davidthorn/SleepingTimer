@@ -17,7 +17,7 @@ public struct SleepEditorView: View {
     @State private var showDeleteConfirmation = false
 
     /// Creates the editor view and its view model.
-    public init(recordID: UUID?, serviceContainer: any ServiceContainerProtocol) {
+    public init(recordID: UUID?, serviceContainer: ServiceContainerProtocol) {
         self.recordID = recordID
         let vm = SleepEditorViewModel(recordID: recordID, sleepStore: serviceContainer.sleepStore)
         _viewModel = StateObject(wrappedValue: vm)

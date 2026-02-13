@@ -9,10 +9,10 @@ import SwiftUI
 
 /// Navigation scene for sleep history flows.
 public struct HistoryScene: View {
-    private let serviceContainer: any ServiceContainerProtocol
+    private let serviceContainer: ServiceContainerProtocol
 
     /// Creates the history scene with dependencies.
-    public init(serviceContainer: any ServiceContainerProtocol) {
+    public init(serviceContainer: ServiceContainerProtocol) {
         self.serviceContainer = serviceContainer
     }
 

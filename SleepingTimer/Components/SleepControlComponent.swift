@@ -18,7 +18,7 @@ public struct SleepControlComponent<Route: Hashable>: View {
 
     /// Creates a reusable sleep control component.
     public init(
-        sleepStore: any SleepStoreProtocol,
+        sleepStore: SleepStoreProtocol,
         createRoute: Route,
         manualAddTitle: String = "Add Sleep Manually"
     ) {

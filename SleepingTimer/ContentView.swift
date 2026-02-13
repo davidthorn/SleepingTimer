@@ -9,13 +9,13 @@ import SwiftUI
 
 /// Root content view hosting the app tab navigation.
 public struct ContentView: View {
-    private let serviceContainer: any ServiceContainerProtocol
+    private let serviceContainer: ServiceContainerProtocol
 
     @State private var loadError: String?
     @State private var hasLoaded = false
 
     /// Creates the root content view with dependencies.
-    public init(serviceContainer: any ServiceContainerProtocol) {
+    public init(serviceContainer: ServiceContainerProtocol) {
         self.serviceContainer = serviceContainer
     }
 

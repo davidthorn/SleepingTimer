@@ -17,12 +17,12 @@ public final class SleepControlViewModel: ObservableObject {
     /// Optional error message for alert presentation.
     @Published public var errorMessage: String?
 
-    private let sleepStore: any SleepStoreProtocol
+    private let sleepStore: SleepStoreProtocol
     private var streamTask: Task<Void, Never>?
     private var didStart = false
 
     /// Creates a sleep control view model with store dependency.
-    public init(sleepStore: any SleepStoreProtocol) {
+    public init(sleepStore: SleepStoreProtocol) {
         self.sleepStore = sleepStore
         self.activeSleepStart = nil
     }

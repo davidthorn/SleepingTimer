@@ -36,13 +36,13 @@ public final class SleepEditorViewModel: ObservableObject {
     }
 
     private let recordID: UUID?
-    private let sleepStore: any SleepStoreProtocol
+    private let sleepStore: SleepStoreProtocol
 
     private var originalDraft: SleepEditorDraft
     private var existingRecord: SleepRecord?
 
     /// Creates a view model for either create or edit flow.
-    public init(recordID: UUID?, sleepStore: any SleepStoreProtocol) {
+    public init(recordID: UUID?, sleepStore: SleepStoreProtocol) {
         self.recordID = recordID
         self.sleepStore = sleepStore
 

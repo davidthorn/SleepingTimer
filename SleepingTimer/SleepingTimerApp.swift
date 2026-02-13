@@ -10,7 +10,7 @@ import SwiftUI
 /// Application entry point for the SleepingTimer iOS app.
 @main
 public struct SleepingTimerApp: App {
-    private let serviceContainer: any ServiceContainerProtocol
+    private let serviceContainer: ServiceContainer
 
     /// Creates the app with its root service container.
     public init() {

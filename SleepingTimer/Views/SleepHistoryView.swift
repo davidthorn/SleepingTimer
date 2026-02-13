@@ -12,7 +12,7 @@ public struct SleepHistoryView: View {
     @StateObject private var viewModel: SleepHistoryViewModel
 
     /// Creates the history view and its view model.
-    public init(serviceContainer: any ServiceContainerProtocol) {
+    public init(serviceContainer: ServiceContainerProtocol) {
         let vm = SleepHistoryViewModel(sleepStore: serviceContainer.sleepStore)
         _viewModel = StateObject(wrappedValue: vm)
     }

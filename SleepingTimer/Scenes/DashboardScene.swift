@@ -9,10 +9,10 @@ import SwiftUI
 
 /// Navigation scene for dashboard flows.
 public struct DashboardScene: View {
-    private let serviceContainer: any ServiceContainerProtocol
+    private let serviceContainer: ServiceContainerProtocol
 
     /// Creates the dashboard scene with dependencies.
-    public init(serviceContainer: any ServiceContainerProtocol) {
+    public init(serviceContainer: ServiceContainerProtocol) {
         self.serviceContainer = serviceContainer
     }
 

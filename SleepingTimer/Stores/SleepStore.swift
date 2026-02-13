@@ -7,20 +7,6 @@
 
 import Foundation
 
-/// Errors produced by `SleepStore` operations.
-public enum SleepStoreError: LocalizedError, Sendable {
-    /// Indicates an end date that is not after the start date.
-    case invalidDateRange
-
-    /// A localized error description for UI presentation.
-    public var errorDescription: String? {
-        switch self {
-        case .invalidDateRange:
-            return "End date must be after start date."
-        }
-    }
-}
-
 /// Actor-based JSON persistence store for sleep records.
 public actor SleepStore: SleepStoreProtocol {
     /// The file name used in the app Documents directory.
