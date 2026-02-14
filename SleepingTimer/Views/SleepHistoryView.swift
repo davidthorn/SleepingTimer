@@ -22,11 +22,11 @@ public struct SleepHistoryView: View {
         List {
             Section {
                 NavigationLink(value: HistoryRoute.create) {
-                    Label("Add Sleep", systemImage: "plus.circle")
+                    Label("Add Sleep", systemImage: "square.and.pencil")
                 }
             }
 
-            Section("All Sleeps") {
+            Section {
                 if viewModel.records.isEmpty {
                     Text("No sleep records yet.")
                         .foregroundStyle(.secondary)
@@ -37,9 +37,15 @@ public struct SleepHistoryView: View {
                         }
                     }
                 }
+            } header: {
+                Label("All Sleeps", systemImage: "list.bullet.clipboard")
             }
         }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
+        .background(backgroundGradient.ignoresSafeArea())
         .navigationTitle("Sleep History")
+        .tint(primaryAccent)
         .task {
             if Task.isCancelled {
                 return
@@ -47,6 +53,14 @@ public struct SleepHistoryView: View {
             await viewModel.start()
         }
         .alert("Error", isPresented: errorBinding) {
+            Button("Retry") {
+                Task {
+                    if Task.isCancelled {
+                        return
+                    }
+                    await viewModel.start()
+                }
+            }
             Button("OK", role: .cancel) {
                 viewModel.errorMessage = nil
             }
@@ -64,6 +78,21 @@ public struct SleepHistoryView: View {
                 }
             }
         )
+    }
+
+    private var backgroundGradient: LinearGradient {
+        LinearGradient(
+            colors: [
+                Color(red: 0.99, green: 0.95, blue: 0.97),
+                Color(red: 0.92, green: 0.96, blue: 1.0)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+
+    private var primaryAccent: Color {
+        Color(red: 0.84, green: 0.34, blue: 0.55)
     }
 }
 

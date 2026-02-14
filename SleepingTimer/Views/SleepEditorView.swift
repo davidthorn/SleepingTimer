@@ -30,14 +30,18 @@ public struct SleepEditorView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, alignment: .center)
             } else {
-                Section("Sleep Window") {
+                Section {
                     DatePicker("Start", selection: startDateBinding)
                     DatePicker("End", selection: endDateBinding)
+                } header: {
+                    Label("Sleep Window", systemImage: "moon.zzz.fill")
                 }
 
-                Section("Notes") {
+                Section {
                     TextField("Optional note", text: noteBinding, axis: .vertical)
                         .lineLimit(2...4)
+                } header: {
+                    Label("Notes", systemImage: "note.text")
                 }
 
                 Section {
@@ -70,7 +74,10 @@ public struct SleepEditorView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(backgroundGradient.ignoresSafeArea())
         .navigationTitle(recordID == nil ? "New Sleep" : "Edit Sleep")
+        .tint(primaryAccent)
         .alert("Error", isPresented: errorBinding) {
             Button("OK", role: .cancel) {
                 viewModel.errorMessage = nil
@@ -130,6 +137,21 @@ public struct SleepEditorView: View {
             get: { viewModel.draft.note },
             set: { viewModel.draft.note = $0 }
         )
+    }
+
+    private var backgroundGradient: LinearGradient {
+        LinearGradient(
+            colors: [
+                Color(red: 0.99, green: 0.95, blue: 0.97),
+                Color(red: 0.92, green: 0.96, blue: 1.0)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+
+    private var primaryAccent: Color {
+        Color(red: 0.84, green: 0.34, blue: 0.55)
     }
 }
 

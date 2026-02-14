@@ -17,9 +17,13 @@ public actor SleepStore: SleepStoreProtocol {
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
     private let fileManager: FileManager
+    private let storageURLProvider: SleepStoreStorageURLProviding
 
     /// Creates an empty store instance.
-    public init() {
+    public init(
+        fileManager: FileManager = .default,
+        storageURLProvider: SleepStoreStorageURLProviding = DefaultSleepStoreStorageURLProvider()
+    ) {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         encoder.outputFormatting = [.sortedKeys]
@@ -31,7 +35,8 @@ public actor SleepStore: SleepStoreProtocol {
         self.continuations = [:]
         self.encoder = encoder
         self.decoder = decoder
-        self.fileManager = .default
+        self.fileManager = fileManager
+        self.storageURLProvider = storageURLProvider
     }
 
     /// Loads persisted records from Documents directory.
@@ -71,6 +76,10 @@ public actor SleepStore: SleepStoreProtocol {
 
     /// Starts a new active sleep timer.
     public func startSleep(at date: Date) async throws {
+        guard snapshotState.activeSleepStart == nil else {
+            throw SleepStoreError.activeSleepAlreadyRunning
+        }
+
         snapshotState.activeSleepStart = date
         try persist()
         publishCurrentState()
@@ -167,10 +176,6 @@ public actor SleepStore: SleepStoreProtocol {
     }
 
     private func storageURL() throws -> URL {
-        guard let documents = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            throw CocoaError(.fileNoSuchFile)
-        }
-
-        return documents.appendingPathComponent(Self.fileName)
+        try storageURLProvider.storageURL(fileName: Self.fileName)
     }
 }

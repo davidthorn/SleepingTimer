@@ -30,8 +30,12 @@ public struct DashboardView: View {
                 recentSleepsSection
             }
             .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .background(backgroundGradient.ignoresSafeArea())
+        .scrollContentBackground(.hidden)
         .navigationTitle("Dashboard")
+        .tint(primaryAccent)
         .task {
             if Task.isCancelled {
                 return
@@ -39,6 +43,14 @@ public struct DashboardView: View {
             await viewModel.start()
         }
         .alert("Error", isPresented: errorBinding) {
+            Button("Retry") {
+                Task {
+                    if Task.isCancelled {
+                        return
+                    }
+                    await viewModel.start()
+                }
+            }
             Button("OK", role: .cancel) {
                 viewModel.errorMessage = nil
             }
@@ -49,7 +61,7 @@ public struct DashboardView: View {
 
     private var recentSleepsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Recent Sleeps")
+            Label("Recent Sleeps", systemImage: "moon.zzz.fill")
                 .font(.headline)
 
             if viewModel.recentRecords.isEmpty {
@@ -61,10 +73,19 @@ public struct DashboardView: View {
                     NavigationLink(value: DashboardRoute.edit(record.id)) {
                         SleepRecordRowView(record: record)
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .buttonStyle(.plain)
                 }
             }
         }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.white.opacity(0.82), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.white.opacity(0.5), lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 4)
     }
 
     private var errorBinding: Binding<Bool> {
@@ -76,6 +97,21 @@ public struct DashboardView: View {
                 }
             }
         )
+    }
+
+    private var backgroundGradient: LinearGradient {
+        LinearGradient(
+            colors: [
+                Color(red: 0.99, green: 0.95, blue: 0.97),
+                Color(red: 0.92, green: 0.96, blue: 1.0)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+
+    private var primaryAccent: Color {
+        Color(red: 0.84, green: 0.34, blue: 0.55)
     }
 }
 

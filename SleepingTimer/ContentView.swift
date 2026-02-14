@@ -13,6 +13,7 @@ public struct ContentView: View {
 
     @State private var loadError: String?
     @State private var hasLoaded = false
+    @State private var loadAttempt = 0
 
     /// Creates the root content view with dependencies.
     public init(serviceContainer: ServiceContainerProtocol) {
@@ -32,19 +33,24 @@ public struct ContentView: View {
                     Label("History", systemImage: "list.bullet")
                 }
         }
-        .task {
+        .tint(primaryAccent)
+        .task(id: loadAttempt) {
             if Task.isCancelled || hasLoaded {
                 return
             }
 
-            hasLoaded = true
             do {
                 try await serviceContainer.sleepStore.loadFromDisk()
+                hasLoaded = true
+                loadError = nil
             } catch {
                 loadError = error.localizedDescription
             }
         }
         .alert("Could Not Load Sleep Data", isPresented: loadErrorBinding) {
+            Button("Retry") {
+                loadAttempt += 1
+            }
             Button("OK", role: .cancel) {
                 loadError = nil
             }
@@ -62,6 +68,10 @@ public struct ContentView: View {
                 }
             }
         )
+    }
+
+    private var primaryAccent: Color {
+        Color(red: 0.84, green: 0.34, blue: 0.55)
     }
 }
 

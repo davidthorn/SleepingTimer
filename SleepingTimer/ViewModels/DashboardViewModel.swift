@@ -22,6 +22,7 @@ public final class DashboardViewModel: ObservableObject {
 
     private let sleepStore: SleepStoreProtocol
     private var streamTask: Task<Void, Never>?
+    private var isStarting = false
 
     /// Creates a dashboard view model.
     public init(sleepStore: SleepStoreProtocol) {
@@ -36,15 +37,19 @@ public final class DashboardViewModel: ObservableObject {
 
     /// Starts loading data and snapshot subscription.
     public func start() async {
-        guard !didStart else {
+        guard !didStart, !isStarting else {
             return
         }
 
-        didStart = true
+        isStarting = true
+        defer { isStarting = false }
+
         subscribeToSnapshotStream()
 
         do {
             try await sleepStore.loadFromDisk()
+            didStart = true
+            errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
         }
